@@ -1,0 +1,4 @@
+.movieDescription {
+    display: flex;
+    justify-content: space-between;
+}
