@@ -41,6 +41,10 @@ class Main extends React.Component<any, MainStateType> {
       .then((res: ResponseType) => {
         this.setState({movies: res.data.Search});
         this.setState({isLoading: false});
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({isLoading: false});
       });
   };
 
@@ -48,6 +52,10 @@ class Main extends React.Component<any, MainStateType> {
     axios.get(`https://www.omdbapi.com/?apikey=${API_KEY}&s=lebowski`)
       .then((res: ResponseType) => {
         this.setState({movies: res.data.Search});
+        this.setState({isLoading: false});
+      })
+      .catch(err => {
+        console.log(err);
         this.setState({isLoading: false});
       });
   }
