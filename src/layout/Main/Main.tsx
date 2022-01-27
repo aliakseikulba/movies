@@ -45,7 +45,7 @@ class Main extends React.Component<any, MainStateType> {
   };
 
   componentDidMount() {
-    axios.get(`https://www.omdbapi.com/?apikey=${API_KEY}&s=shrek`)
+    axios.get(`https://www.omdbapi.com/?apikey=${API_KEY}&s=lebowski`)
       .then((res: ResponseType) => {
         this.setState({movies: res.data.Search});
         this.setState({isLoading: false});

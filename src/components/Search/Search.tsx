@@ -1,4 +1,4 @@
-import React, {KeyboardEvent} from 'react';
+import React, {KeyboardEvent, ChangeEvent} from 'react';
 import {Button, FormControlLabel, Radio, RadioGroup, TextField} from '@mui/material';
 import s from './Search.module.css';
 
@@ -13,25 +13,28 @@ type SearchST = {
 class Search extends React.Component<SearchPT, SearchST> {
 
   state: SearchST = {
-    search: 'shrek',
+    search: 'lebowski',
     type: 'all',
+  };
+
+  onChangeFormHandler = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    this.setState({search: e.currentTarget.value});
   };
 
   onEnterPressHandler = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       this.props.searchMovies(this.state.search, this.state.type);
-      this.setState({search: ''});
     }
   };
   onClickHandler = () => {
     if (this.state.search !== '') {
       this.props.searchMovies(this.state.search, this.state.type);
-      this.setState({search: ''});
     }
   };
   onFilterChangeHandler = (e: any) => {
+    console.log(e.currentTarget.value);
     this.setState(() => ({type: e.target.value}));
-    this.props.searchMovies(this.state.search, e.target.value);
+    this.props.searchMovies(this.state.search, e.currentTarget.value);
   };
 
   render() {
@@ -44,7 +47,7 @@ class Search extends React.Component<SearchPT, SearchST> {
                    label="Search"
                    variant="standard"
                    value={this.state.search}
-                   onChange={(e) => this.setState({search: e.target.value})}
+                   onChange={this.onChangeFormHandler}
                    onKeyPress={this.onEnterPressHandler}/>
         <div className={s.btn}>
           <Button variant="contained"
