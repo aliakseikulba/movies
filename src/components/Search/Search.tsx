@@ -1,81 +1,80 @@
-import React, {KeyboardEvent, ChangeEvent} from 'react';
+import React, {KeyboardEvent, ChangeEvent, FC, useState} from 'react';
 import {Button, FormControlLabel, Radio, RadioGroup, TextField} from '@mui/material';
 import s from './Search.module.css';
+import {Filter} from '../../layout/Main/Main';
 
-type SearchPT = {
-  searchMovies: (movieName: string, type: string) => void
-}
-type SearchST = {
-  search: string
-  type: 'all' | 'movie' | 'series'
+type SearchProps = {
+  searchMovies: (movieName: string, type: Filter) => void
 }
 
-class Search extends React.Component<SearchPT, SearchST> {
 
-  state: SearchST = {
-    search: 'lebowski',
-    type: 'all',
+const Search: FC<SearchProps> = ({searchMovies}) => {
+
+  const [searchName, setSearchName] = useState<string>('');
+  const [searchType, setSearchType] = useState<Filter>('all');
+
+
+  const onChangeFormHandler = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setSearchName(e.currentTarget.value);
   };
 
-  onChangeFormHandler = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    this.setState({search: e.currentTarget.value});
-  };
-
-  onEnterPressHandler = (e: KeyboardEvent<HTMLDivElement>) => {
+  const onEnterPressHandler = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
-      this.props.searchMovies(this.state.search, this.state.type);
+      searchMovies(searchName, searchType);
     }
   };
-  onClickHandler = () => {
-    if (this.state.search !== '') {
-      this.props.searchMovies(this.state.search, this.state.type);
+  const onClickHandler = () => {
+    if (searchName !== '') {
+      searchMovies(searchName, searchType);
     }
   };
-  onFilterChangeHandler = (e: any) => {
-    console.log(e.currentTarget.value);
-    this.setState(() => ({type: e.target.value}));
-    this.props.searchMovies(this.state.search, e.currentTarget.value);
+  const onFilterChangeHandler = (e: any) => {
+    setSearchType(e.currentTarget.value);
+    searchMovies(searchName, e.currentTarget.value);
   };
 
-  render() {
-
-    return (
-      <div className={s.inputField}>
-        <TextField id="standard-basic"
-                   fullWidth={true}
-                   color="secondary"
-                   label="Search"
-                   variant="standard"
-                   value={this.state.search}
-                   onChange={this.onChangeFormHandler}
-                   onKeyPress={this.onEnterPressHandler}/>
-        <div className={s.btn}>
-          <Button variant="contained"
-                  color="secondary"
-                  sx={{margin: '10px 0'}}
-                  onClick={this.onClickHandler}
-          >
-            Search
-          </Button>
-        </div>
-        <RadioGroup row aria-label="search params" name="row-radio-buttons-group">
-          <FormControlLabel value="movie"
-                            control={<Radio color="secondary"/>} label="Movies"
-                            onChange={this.onFilterChangeHandler}
-                            checked={this.state.type === 'movie'}/>
-          <FormControlLabel value="series"
-                            control={<Radio color="secondary"/>} label="Series"
-                            onChange={this.onFilterChangeHandler}
-                            checked={this.state.type === 'series'}/>
-          <FormControlLabel value="all"
-                            control={<Radio color="secondary"/>} label="All"
-                            onChange={this.onFilterChangeHandler}
-                            checked={this.state.type === 'all'}/>
-        </RadioGroup>
+  return (
+    <div className={s.inputField}>
+      <TextField id="standard-basic"
+                 fullWidth={true}
+                 color="secondary"
+                 label="Search"
+                 variant="standard"
+                 value={searchName}
+                 onChange={onChangeFormHandler}
+                 onKeyPress={onEnterPressHandler}/>
+      <div className={s.btn}>
+        <Button variant="contained"
+                color="secondary"
+                sx={{margin: '10px 0'}}
+                onClick={onClickHandler}
+        >
+          Search
+        </Button>
       </div>
-    );
-  }
-}
+      <RadioGroup row aria-label="search params" name="row-radio-buttons-group">
+        <FormControlLabel value="all"
+                          control={<Radio color="secondary"/>}
+                          label="All"
+                          onChange={onFilterChangeHandler}
+                          checked={searchType === 'all'}
+        />
+        <FormControlLabel value="movie"
+                          control={<Radio color="secondary"/>}
+                          label="Movies"
+                          onChange={onFilterChangeHandler}
+                          checked={searchType === 'movie'}
+        />
+        <FormControlLabel value="series"
+                          control={<Radio color="secondary"/>}
+                          label="Series"
+                          onChange={onFilterChangeHandler}
+                          checked={searchType === 'series'}
+        />
+      </RadioGroup>
+    </div>
+  );
+};
 
 export {Search};
 
